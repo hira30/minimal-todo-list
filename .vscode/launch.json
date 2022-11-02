@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/bin/Debug/net6.0/todo-react-app.dll",
+      "program": "${workspaceFolder}/bin/Debug/net6.0/minimal-todo-app.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,

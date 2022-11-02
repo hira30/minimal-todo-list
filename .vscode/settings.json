@@ -1,5 +1,5 @@
 {
   "appService.preDeployTask": "publish-release",
   "appService.deploySubpath": "bin\\Release\\net6.0\\publish",
-  "appService.defaultWebAppToDeploy": "/subscriptions/d1f79ab8-a752-4975-b0c1-7c54c4362592/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/todo-react-web-app"
+  "appService.defaultWebAppToDeploy": "/subscriptions/d1f79ab8-a752-4975-b0c1-7c54c4362592/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/minimal-todo-web-app"
 }
