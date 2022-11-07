@@ -11,8 +11,8 @@ import { TodoItem } from "./Todo";
 
 type Props = {
   todos: TodoItem[];
-  onChange: (id?: number) => Promise<void>;
-  onClick: (id?: number) => Promise<void>;
+  onChange: (id?: string) => Promise<void>;
+  onClick: (id?: string) => Promise<void>;
 };
 
 export const TodoList = ({ todos, onChange, onClick }: Props) => {

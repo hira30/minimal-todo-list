@@ -5,7 +5,7 @@ import { TodoList } from "./TodoList";
 
 // TodoItemの型宣言
 export type TodoItem = {
-  id?: number;
+  id?: string;
   name: string;
   isComplete: boolean;
 };
@@ -43,7 +43,7 @@ export const Todo = () => {
   };
 
   // 完了ステータス（チェックボックス）変更時の処理
-  const handleChangeStatus = async (id?: number) => {
+  const handleChangeStatus = async (id?: string) => {
     // 対象のTodoアイテムの完了フラグを反転して新しい配列に格納
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
@@ -67,7 +67,7 @@ export const Todo = () => {
   };
 
   // 削除ボタンクリック時の処理
-  const handleDelete = async (id?: number) => {
+  const handleDelete = async (id?: string) => {
     try {
       // APIに削除対象のidをDELETEリクエスト
       await axios.delete(`api/todoitems/${id}`);

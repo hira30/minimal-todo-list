@@ -1,32 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using todo_react_app.Models;
+using minimal_todo_app.Models;
+using minimal_todo_app.Services;
 
-namespace todo_react_app.Controllers
+namespace minimal_todo_app.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly TodoContext _context;
+        private readonly ICosmosDbService _cosmosDbService;
 
-        public TodoItemsController(TodoContext context)
+        public TodoItemsController(ICosmosDbService cosmosDbService)
         {
-            _context = context;
+            _cosmosDbService = cosmosDbService;
         }
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoItem>>> Get()
         {
-            return await _context.TodoItems.ToListAsync();
+            var result = await _cosmosDbService.GetItemsAsync("SELECT * FROM c");
+            return result.ToList();
         }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
+        public async Task<ActionResult<TodoItem>> GetTodoItem(string id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await _cosmosDbService.GetItemAsync(id);
 
             if (todoItem == null)
             {
@@ -37,64 +38,39 @@ namespace todo_react_app.Controllers
         }
 
         // PUT: api/TodoItems/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
+        [HttpPut]
+        public async Task<IActionResult> Put(string id, TodoItem item)
         {
-            if (id != todoItem.Id)
+            if (id != item.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(todoItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _cosmosDbService.UpdateItemAsync(id, item);
             return NoContent();
         }
 
         // POST: api/TodoItems
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<ActionResult<TodoItem>> Post(TodoItem item)
         {
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            item.Id = Guid.NewGuid().ToString();
+            await _cosmosDbService.AddItemAsync(item);
+            return CreatedAtAction("Get", new { id = item.Id }, item);
         }
 
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await _cosmosDbService.GetItemAsync(id);
             if (todoItem == null)
             {
                 return NotFound();
             }
 
-            _context.TodoItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
-
+            await _cosmosDbService.DeleteItemAsync(id);
             return NoContent();
-        }
-
-        private bool TodoItemExists(int id)
-        {
-            return _context.TodoItems.Any(e => e.Id == id);
         }
     }
 }

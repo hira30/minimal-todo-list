@@ -1,10 +1,16 @@
-namespace todo_react_app.Models;
+using Newtonsoft.Json;
 
-public class TodoItem
+namespace minimal_todo_app.Models
 {
-    public int Id { get; set; }
+    public class TodoItem
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; } = string.Empty;
 
-    public string? Name { get; set; }
+        [JsonProperty("name")]
+        public string? Name { get; set; }
 
-    public bool IsComplete { get; set; }
+        [JsonProperty("isComplete")]
+        public bool IsComplete { get; set; }
+    }
 }
